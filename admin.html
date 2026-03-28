@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Family Hub Admin</title>
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --surface: #f7f7f8; /* Cinza clarinho ao estilo Apple */
+            --text-pri: #000000;
+            --text-sec: #8e8e93; /* Cinza do texto secundario iOS */
+            --accent: #0a84ff; /* Apple Blue */
+            --border: #e5e5ea;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-pri);
+            font-weight: 400;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Top Navigation Header iOS-like */
+        header {
+            padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            text-align: center;
+        }
+
+        /* Apple-style Segmented Control / Tabs */
+        .nav-menu {
+            display: flex;
+            background: var(--surface);
+            padding: 4px;
+            border-radius: 10px;
+            gap: 2px;
+            overflow-x: auto;
+        }
+        .nav-menu::-webkit-scrollbar { display: none; }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 5px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-sec);
+            background: transparent;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        .nav-tab.active {
+            background: var(--bg-color);
+            color: var(--text-pri);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1); /* Sombra subtil de aba ativa */
+        }
+
+        /* Content Area */
+        main {
+            flex: 1;
+            padding: 25px 20px;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .tab-content.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 18px; /* Espaço para respirar */
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-sec);
+            margin-bottom: -10px;
+            margin-left: 5px;
+        }
+
+        /* Minimal Apple Inputs */
+        .clean-input, .clean-select {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid transparent; /* Campo sem bordas visuais standard */
+            color: var(--text-pri);
+            font-family: inherit;
+            font-size: 1rem;
+            padding: 18px;
+            border-radius: 12px;
+            outline: none;
+            transition: 0.3s;
+            appearance: none; /* remove seta padrao em iOS/Android select */
+        }
+        .clean-input::placeholder { color: #aaaaaa; }
+        .clean-input:focus, .clean-select:focus { 
+            background: var(--bg-color); 
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2); /* Foco ao estilo iOS */
+        }
+
+        /* Botões Arredondados */
+        .submit-btn {
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 18px;
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px; /* Cantos arredondados, agradável */
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+        .submit-btn:active { transform: scale(0.96); opacity: 0.9; }
+        .submit-btn.success { background: #34c759; /* Apple Green */ }
+
+        .time-group { display: flex; gap: 10px; }
+        .time-group > div { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="main-title">Configurar Hub</h1>
+        <div class="nav-menu">
+            <button class="nav-tab active" data-target="sec-calendar">Calendário</button>
+            <button class="nav-tab" data-target="sec-tasks">Tarefas</button>
+            <button class="nav-tab" data-target="sec-meals">Refeições</button>
+            <button class="nav-tab" data-target="sec-lists">Listas</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. CALENDÁRIO -->
+        <div id="sec-calendar" class="tab-content active">
+            <div class="form-group">
+                <label>Título do Evento</label>
+                <input type="text" id="cal-title" class="clean-input" placeholder="Ex: Aniversário, Consulta..." autocomplete="off">
+                
+                <div class="time-group">
+                    <div style="gap:0">
+                        <label style="margin-bottom: 6px;">Data</label>
+                        <input type="date" id="cal-date" class="clean-input">
+                    </div>
+                    <div style="gap:0">
+                        <label style="margin-bottom: 6px;">Hora</label>
+                        <input type="time" id="cal-time" class="clean-input">
+                    </div>
+                </div>
+
+                <label>Membro Central</label>
+                <select id="cal-member" class="clean-select">
+                    <option value="joao">João</option>
+                    <option value="paula">Paula</option>
+                    <option value="alice">Alice</option>
+                    <option value="noel">🐶 Noel</option>
+                </select>
+
+                <button id="btn-cal" class="submit-btn" onclick="submitCalendar()">Enviar Evento</button>
+            </div>
+        </div>
+
+        <!-- 2. TAREFAS -->
+        <div id="sec-tasks" class="tab-content">
+            <div class="form-group">
+                <label>Título da Tarefa</label>
+                <input type="text" id="task-title" class="clean-input" placeholder="Ex: Pagar a conta da água..." autocomplete="off">
+                
+                <label>Nível de Urgência</label>
+                <select id="task-urgency" class="clean-select">
+                    <option value="normal">🟢 Urgência Normal</option>
+                    <option value="alta">🔴 Urgência Máxima</option>
+                </select>
+
+                <button id="btn-task" class="submit-btn" onclick="submitTask()">Adicionar Tarefa</button>
+            </div>
+        </div>
+
+        <!-- 3. REFEIÇÕES -->
+        <div id="sec-meals" class="tab-content">
+            <div class="form-group">
+                <label>Dia da Semana Planeado</label>
+                <select id="meal-day" class="clean-select">
+                    <option value="Segunda">Segunda-feira</option>
+                    <option value="Terça">Terça-feira</option>
+                    <option value="Quarta">Quarta-feira</option>
+                    <option value="Quinta">Quinta-feira</option>
+                    <option value="Sexta">Sexta-feira</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                </select>
+
+                <label>Período</label>
+                <select id="meal-type" class="clean-select">
+                    <option value="Almoço">☀️ Almoço</option>
+                    <option value="Jantar">🌙 Jantar</option>
+                </select>
+
+                <label>Nome do Prato (Principal)</label>
+                <input type="text" id="meal-name" class="clean-input" placeholder="Ex: Frango Rústico Azeitonas">
+
+                <label>Anotações, Receita ou Dicas</label>
+                <input type="text" id="meal-notes" class="clean-input" placeholder="Opcional: Meter o frango marinando de véspera">
+
+                <button id="btn-meal" class="submit-btn" onclick="submitMeal()">Marcar Refeição</button>
+            </div>
+        </div>
+
+        <!-- 4. LISTAS DE COMPRAS -->
+        <div id="sec-lists" class="tab-content">
+            <div class="form-group">
+                <label>Partilhar com o Dashboard Familiar</label>
+                <input type="text" id="list-item" class="clean-input" placeholder="Ex: Ovo, Farinha, Sumos...">
+
+                <button id="btn-list" class="submit-btn" onclick="submitList()">Adicionar Item</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- FIREBASE SDK v9+ CDN (Single File Architecture) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Variável Mestre FirebaseConfig pronta
+        const firebaseConfig = {
+            apiKey: "AIzaSyDFwECdwELB_wPHR_9rkkY9MRcNBjQSUks",
+            authDomain: "viaz-1e406.firebaseapp.com",
+            databaseURL: "https://viaz-1e406-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "viaz-1e406",
+            storageBucket: "viaz-1e406.firebasestorage.app",
+            messagingSenderId: "73407200033",
+            appId: "1:73407200033:web:ba4a55ff672252e2645c60"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // --- SISTEMA DE NAVEGAÇÃO SPA NO TELEMÓVEL --- //
+        const tabs = document.querySelectorAll('.nav-tab');
+        const contents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                
+                // Ativa a tab clicada
+                tab.classList.add('active');
+                document.getElementById(tab.getAttribute('data-target')).classList.add('active');
+            });
+        });
+
+        // Configuração Inicial de Datas
+        document.getElementById('cal-date').value = new Date().toISOString().split('T')[0];
+
+        // --- LÓGICAS INTELIGENTES DE ENVIO C/ CONFORTO VISUAL --- //
+        const showSuccessLight = (btn, originalText) => {
+            btn.classList.add('success');
+            btn.textContent = '✓ Adicionado c/ Sucesso';
+            setTimeout(() => {
+                btn.classList.remove('success');
+                btn.textContent = originalText;
+            }, 1800);
+        };
+
+        // 1. Enviar HUB/CALENDAR
+        window.submitCalendar = async () => {
+            const title = document.getElementById('cal-title').value.trim();
+            const date = document.getElementById('cal-date').value;
+            const time = document.getElementById('cal-time').value;
+            const member = document.getElementById('cal-member').value;
+            
+            if(!title || !date) return alert("Preecha o título e a data do evento!");
+
+            // Estruta pedida c/ id auto gerado pelo push do Firebase
+            const payload = {
+                title: title,
+                date: date,
+                time: time,
+                member: member,
+                createdAt: serverTimestamp() // Requisito mestre: Timestamp de servidor
+            };
+
+            const btn = document.getElementById('btn-cal');
+            try {
+                btn.textContent = 'A processar...';
+                await push(ref(database, 'hub/calendar'), payload);
+                
+                document.getElementById('cal-title').value = '';
+                showSuccessLight(btn, 'Enviar Evento');
+            } catch(e) { alert("Erro crítico de Rede"); btn.textContent = 'Enviar Evento'; }
+        };
+
+        // 2. Enviar HUB/TASKS
+        window.submitTask = async () => {
+            const title = document.getElementById('task-title').value.trim();
+            const urgency = document.getElementById('task-urgency').value;
+            
+            if(!title) return alert("Descreva a tarefa em causa!");
+
+            const payload = {
+                title: title,
+                urgency: urgency,
+                createdAt: serverTimestamp()
+            };
+
+            const btn = document.getElementById('btn-task');
+            try {
+                btn.textContent = 'A processar...';
+                await push(ref(database, 'hub/tasks'), payload);
+                
+                document.getElementById('task-title').value = '';
+                showSuccessLight(btn, 'Adicionar Tarefa');
+            } catch(e) { alert("Erro crítico de Rede"); btn.textContent = 'Adicionar Tarefa'; }
+        };
+
+        // 3. Enviar HUB/MEALS
+        window.submitMeal = async () => {
+            const day = document.getElementById('meal-day').value;
+            const type = document.getElementById('meal-type').value;
+            const name = document.getElementById('meal-name').value.trim();
+            const notes = document.getElementById('meal-notes').value.trim();
+            
+            if(!name) return alert("Insira o nome do prato principal!");
+
+            const payload = {
+                day: day,
+                type: type,
+                name: name,
+                notes: notes,
+                createdAt: serverTimestamp()
+            };
+
+            const btn = document.getElementById('btn-meal');
+            try {
+                btn.textContent = 'A processar...';
+                await push(ref(database, 'hub/meals'), payload);
+                
+                document.getElementById('meal-name').value = '';
+                document.getElementById('meal-notes').value = '';
+                showSuccessLight(btn, 'Marcar Refeição');
+            } catch(e) { alert("Erro de Rede"); btn.textContent = 'Marcar Refeição'; }
+        };
+
+        // 4. Enviar HUB/SHOPPINGLIST
+        window.submitList = async () => {
+            const text = document.getElementById('list-item').value.trim();
+            if(!text) return;
+
+            const payload = {
+                text: text,
+                createdAt: serverTimestamp()
+            };
+
+            const btn = document.getElementById('btn-list');
+            try {
+                btn.textContent = 'A processar...';
+                await push(ref(database, 'hub/shoppingList'), payload);
+                
+                document.getElementById('list-item').value = '';
+                showSuccessLight(btn, 'Adicionar Item');
+            } catch(e) { alert("Erro de Rede"); btn.textContent = 'Adicionar Item'; }
+        };
+    </script>
+</body>
+</html>
