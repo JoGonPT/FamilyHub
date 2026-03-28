@@ -174,3 +174,47 @@ body.night-mode #background-slideshow {
     .interactive-list li { margin-left:-10px; margin-right:-10px; padding: 15px 10px; }
     .interactive-list li:hover { padding-left: 15px; }
 }
+
+/* ========================================================= */
+/* 7. SMART TV SUPER-SCALING (QuadHD, 4K, 8K)                */
+/* ========================================================= */
+
+@media (min-width: 1920px) {
+    body { font-size: 1.2rem; }
+    .minimalist-sidebar { width: 320px; padding: 60px 40px; }
+    .clock-display { font-size: 5.5rem; }
+    .date-display { font-size: 1.3rem; }
+    .weather-mini { font-size: 1.6rem; margin-top:-10px;}
+    .weather-mini img { width: 50px; }
+    
+    .view-title { font-size: 4rem; }
+    .col-head, .minimal-lbl { font-size: 1.4rem; }
+    .event-card { padding: 15px 20px; border-left-width: 4px; }
+    .event-card .ev-title { font-size: 1.3rem; }
+    .event-card .ev-desc { font-size: 1rem; }
+    
+    .clean-list li { font-size: 1.8rem; padding: 30px 0; }
+    .grid-header, .grid-row { gap: 40px; }
+    .nav-btn { font-size: 1.3rem; padding: 20px;}
+    .nav-btn .icon { font-size: 1.8rem; width: 40px; }
+}
+
+@media (min-width: 2560px) {
+    body { font-size: 1.6rem; }
+    .minimalist-sidebar { width: 450px; gap: 60px; }
+    .clock-display { font-size: 8rem; }
+    .date-display { font-size: 1.8rem; }
+    .weather-mini { font-size: 2.5rem; margin-top:-20px;}
+    .weather-mini img { width: 70px; }
+    
+    .view-title { font-size: 6rem; }
+    .col-head, .minimal-lbl { font-size: 2rem; }
+    .event-card { padding: 20px 30px; border-left-width: 6px; }
+    .event-card .ev-title { font-size: 1.8rem; }
+    .event-card .ev-desc { font-size: 1.4rem; }
+    
+    .clean-list li { font-size: 2.5rem; padding: 40px 0; }
+    .grid-header, .grid-row { gap: 60px; }
+    .nav-btn { font-size: 1.8rem; padding: 30px;}
+    .nav-btn .icon { font-size: 2.5rem; width: 60px; }
+}
