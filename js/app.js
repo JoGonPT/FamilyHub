@@ -210,23 +210,59 @@ async function renderMeals() {
     if(!list) return;
     list.innerHTML = '';
     
-    if (meals.length === 0) return list.innerHTML = '<li style="color:var(--text-secondary); border:none;">...</li>';
+    if (meals.length === 0) return list.innerHTML = '<li style="color:var(--text-secondary); border:none;">O Menu está vazio.</li>';
     
     meals.forEach(m => {
         const li = document.createElement('li'); 
+        li.className = 'interactive-list-elem'; // Fornece CSS de Hover Touch
+        li.setAttribute('tabindex', '0');
         li.style.flexDirection = 'column';
         li.style.alignItems = 'flex-start';
         li.style.gap = '5px';
-        
-        // Estrutura enviada pelo Admin
-        const header = `<div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-                            <span>${m.name}</span>
-                            <span style="font-size: 0.85rem; background:rgba(255,255,255,0.05); padding: 5px 10px; border-radius:8px;">${m.type}</span>
-                        </div>`;
-        const details = m.notes ? `<div style="font-size:0.9rem; opacity:0.5; font-weight:300;">📘 ${m.notes}</div>` : '';
+
+        const hasRecipe = m.notes && m.notes.trim() !== '';
+
         const badgetDia = `<div style="color:var(--color-joao); font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">${m.day}</div>`;
         
-        li.innerHTML = badgetDia + header + details;
+        const header = `<div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size: 1.5rem; letter-spacing: -0.5px;">${m.name}</span>
+                            <div style="display:flex; align-items:center; gap: 15px;">
+                                <span style="font-size: 0.85rem; background:rgba(255,255,255,0.05); padding: 5px 10px; border-radius:8px;">${m.type}</span>
+                                ${hasRecipe ? `<span class="arrow-icon" style="font-size: 1.2rem; transition: transform 0.3s ease; opacity:0.5;">▼</span>` : `<span style="width: 1.2rem;"></span>`}
+                            </div>
+                        </div>`;
+                        
+        const detailsContainer = document.createElement('div');
+        detailsContainer.style.width = '100%';
+        detailsContainer.style.maxHeight = '0px';
+        detailsContainer.style.overflow = 'hidden';
+        detailsContainer.style.transition = 'max-height 0.4s ease, opacity 0.4s ease';
+        detailsContainer.style.opacity = '0';
+        
+        if (hasRecipe) {
+            detailsContainer.innerHTML = `<div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; font-size:1.1rem; line-height: 1.6; font-weight:300; margin-top: 15px; border-left: 3px solid var(--color-joao);">
+                                              <span style="display:block; font-size:0.8rem; text-transform:uppercase; color:var(--text-secondary); margin-bottom:10px; font-weight:500;">Modo de Preparo / Notas:</span>
+                                              ${m.notes.replace(/\n/g, '<br>')}
+                                          </div>`;
+            
+            let isExpanded = false;
+            li.addEventListener('click', () => {
+                isExpanded = !isExpanded;
+                const arr = li.querySelector('.arrow-icon');
+                if (isExpanded) {
+                    detailsContainer.style.maxHeight = '800px'; 
+                    detailsContainer.style.opacity = '1';
+                    if(arr) arr.style.transform = 'rotate(180deg)';
+                } else {
+                    detailsContainer.style.maxHeight = '0px';
+                    detailsContainer.style.opacity = '0';
+                    if(arr) arr.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+        
+        li.innerHTML = badgetDia + header;
+        li.appendChild(detailsContainer);
         list.appendChild(li);
     });
 }
