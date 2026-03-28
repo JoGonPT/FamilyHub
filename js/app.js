@@ -78,17 +78,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Slideshow
-let bgIndex = 0;
-const backgroundUrls = [
-    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&q=80&w=1920",
-    "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&q=80&w=1920"
-];
-function changeBg() {
-    document.getElementById('background-slideshow').style.backgroundImage = `url('${backgroundUrls[bgIndex]}')`;
-    bgIndex = (bgIndex + 1) % backgroundUrls.length;
-}
-changeBg(); setInterval(changeBg, 45000);
+// Fundo Sólido (Sem Slideshow de Imagens)
 
 
 // ===============================================

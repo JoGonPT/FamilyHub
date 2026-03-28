@@ -13,20 +13,19 @@
 body {
     font-family: 'Inter', sans-serif; font-weight: 300;
     color: var(--text-primary);
-    overflow: hidden; background: #000;
+    overflow: hidden; 
+    background: #1c1c1e; /* Cinza Neutro Escuro Elegante (Modo Apple) */
+    transition: background-color 2s ease;
 }
 
-/* Background Translúcido / Blur Intenso */
+/* Background Sólido Base */
 #background-slideshow {
-    position: fixed; inset: 0; z-index: -2;
-    background-size: cover; background-position: center;
-    transition: filter 2s ease, background-image 2s ease;
-    filter: blur(25px) brightness(0.85); /* Fundo "Límpido" para Glassmorphism puro */
+    display: none; /* Imagens Inativas - Foco Absoluto na Leitura */
 }
 
 /* Auto Modo Noite (23h-07h) - Menos luminosidade no Quarto/Sala */
-body.night-mode #background-slideshow {
-    filter: blur(25px) brightness(0.4); 
+body.night-mode {
+    background: #000000; /* Preto Puro à noite. Super confortável na TV e poupa OLEDs. */
 }
 
 .app-container { display: flex; height: 100vh; padding: 0; }
