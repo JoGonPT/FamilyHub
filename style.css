@@ -130,3 +130,47 @@ body.night-mode #background-slideshow {
 .interactive-list li { cursor: pointer; transition: 0.3s; padding: 10px 20px;}
 .interactive-list li:hover { padding-left: 30px; background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, transparent 100%); border-radius:10px; }
 .interactive-list li.striked { text-decoration: line-through; opacity: 0.2; }
+
+/* ========================================================= */
+/* 6. RESPONSIVIDADE (Tablets, Portáteis, Ecrãs Menores)     */
+/* ========================================================= */
+
+@media (max-width: 1200px) {
+    .main-content { padding: 40px; }
+    .grid-header, .grid-row { gap: 15px; grid-template-columns: 60px 1fr 1fr 1fr 1fr; }
+    .view-title { font-size: 2.3rem; }
+    .col-head { font-size: 1rem; }
+}
+
+@media (max-width: 900px) {
+    .app-container { flex-direction: column; }
+    
+    /* Sidebar Superior (Horizontal) */
+    .minimalist-sidebar {
+        width: 100%; height: auto; padding: 20px;
+        flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center;
+        border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); gap: 15px;
+    }
+    
+    .clock-display { font-size: 2.5rem; margin-bottom: 0; }
+    .date-display { font-size: 0.9rem; }
+    .weather-mini { margin-top: 0; }
+    
+    .sidebar-nav { flex-direction: row; width: 100%; justify-content: flex-start; overflow-x: auto; gap: 10px; padding-bottom: 5px; }
+    .nav-btn { flex-direction: row; padding: 10px 15px; font-size: 0.95rem; white-space: nowrap; }
+    .nav-btn .icon { font-size: 1.1rem; }
+    
+    /* Scroll Horizontal Nativo para a Grelha do Calendário */
+    .grid-container { overflow-x: auto; }
+    .grid-header, .grid-row { min-width: 700px; /* Garante que os cartões não esmagam */ }
+}
+
+@media (max-width: 600px) {
+    .main-content { padding: 20px; }
+    .view-title { font-size: 1.8rem; }
+    .view-header { flex-direction: column; align-items: flex-start; gap: 15px; margin-bottom: 25px; }
+    
+    .clean-list li { font-size: 1.1rem; flex-direction: column; align-items: flex-start !important; gap: 10px; }
+    .interactive-list li { margin-left:-10px; margin-right:-10px; padding: 15px 10px; }
+    .interactive-list li:hover { padding-left: 15px; }
+}
